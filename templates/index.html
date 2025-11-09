@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Analysis with LLMs</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 2em; background: #f9f9f9; }
+        .container { max-width: 800px; margin: auto; padding: 2em; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h1 { text-align: center; }
+        form { display: flex; flex-direction: column; gap: 1em; }
+        input[type="file"] { padding: 0.5em; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 0.75em; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        button:hover { background: #0056b3; }
+        #loading { text-align: center; display: none; }
+        #results { margin-top: 2em; background: #282c34; color: #fff; padding: 1em; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Document Analysis System</h1>
+        <p>Upload a PDF document to extract, summarize, and categorize its content.</p>
+        
+        <form id="upload-form">
+            <input type="file" name="document" id="document-file" accept="application/pdf" required>
+            <button type="submit">Analyze Document</button>
+        </form>
+
+        <div id="loading">
+            <p>Processing... This may take a few minutes for large documents.</p>
+        </div>
+
+        <h3>Analysis Results:</h3>
+        <pre id="results">Awaiting document upload...</pre>
+    </div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const resultsEl = document.getElementById('results');
+        const loadingEl = document.getElementById('loading');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('document-file');
+            formData.append('document', fileInput.files[0]);
+
+            resultsEl.textContent = 'Uploading and processing...';
+            loadingEl.style.display = 'block';
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Format the JSON data for pretty printing
+                    resultsEl.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    resultsEl.textContent = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                resultsEl.textContent = `An unexpected error occurred: ${error}`;
+            } finally {
+                loadingEl.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
