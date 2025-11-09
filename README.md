@@ -1,8 +1,8 @@
-**Document Analysis with LLMs**
+Document Analysis with LLMs
 
 This project is a Python-based web application that uses Hugging Face transformers (PyTorch) and Flask to analyze large PDF documents. Upload a PDF and receive a JSON object containing a concise summary, extracted named entities (People, Organizations, etc.), and a list of relevant categories.
 
-Features
+**Features**
 
 PDF Upload: Simple web interface to upload .pdf files.
 
@@ -32,11 +32,16 @@ Project Structure
 
 DocAnalysis-LLM/
 ├── app.py              # The Flask server
+
 ├── engine.py           # Loads the PyTorch models (Summarizer, NER, etc.)
+
 ├── processor.py        # Handles PDF reading, chunking, and Map-Reduce logic
+
 ├── requirements.txt    # Python dependencies
+
 ├── templates/
 │   └── index.html      # The frontend webpage
+
 └── uploads/             # Temporary folder for uploaded files (auto-created)
 
 
